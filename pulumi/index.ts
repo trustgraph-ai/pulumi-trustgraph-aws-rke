@@ -758,7 +758,7 @@ const ebsCsiSecret = new k8s.core.v1.Secret(
     { provider: k8sProvider }
 );
 
-const nginx = new k8s.helm.v4.Chart(
+const ebsCsiDeploy = new k8s.helm.v4.Chart(
     "ebs-csi-helm-deployment",
     {
         chart: "aws-ebs-csi-driver",
@@ -792,7 +792,7 @@ const appDeploy = new k8s.yaml.v2.ConfigGroup(
         yaml: resourceDefs,
         skipAwait: true,
     },
-    { provider: k8sProvider }
+    { provider: k8sProvider, dependsOn: ebsCsiDeploy }
 );
 
 // Generate an (empty) gateway secret - no authentication
