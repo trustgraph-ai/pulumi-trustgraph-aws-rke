@@ -670,7 +670,7 @@ const instances = Array.from(Array(nodeCount - 1).keys()).map(
 const fetchKubeconfig = new command.remote.Command(
     "get-kubeconfig",
     {
-        create: "cat /etc/rancher/rke2/rke2.yaml",
+        create: "/usr/local/bin/wait-for-kubeconfig",
         connection: {
             host: addresses[0].publicIp,
             user: "ec2-user",
@@ -678,7 +678,7 @@ const fetchKubeconfig = new command.remote.Command(
         },
     },
     {
-        dependsOn: [serverInstance],
+        dependsOn: [serverInstance, ...instances],
     }
 );
 
