@@ -42,7 +42,7 @@ export const subnet1Cidr = get("subnet-1-cidr");
 // Volume size
 export const volumeSize = 20;
 export const nodeType = get("node-type");
-export const nodeCount = Number(get("node-count"));
+export const agentNodeCount = Number(get("agent-node-count"));
 
 // Amazon Linux 2023, x86-64 in us-west-2 (Oregon).
 export const ami = "ami-0f9d441b5d66d5f31";

@@ -2,28 +2,47 @@
 import * as aws from "@pulumi/aws";
 
 import { awsProvider } from './aws-provider';
-import { addresses } from './addresses';
-import { nodeCount } from './config';
+import { serverAddress, agentAddresses } from './addresses';
+import { agentNodeCount } from './config';
 import { subnet1 } from './vpc';
-import { secGroup } from './security-groups';
+import { serverSecGroup, agentSecGroup } from './security-groups';
+import { nodeToNodeSecGroup } from './security-groups';
 
-export const interfaces = Array.from(Array(nodeCount).keys()).map(
+export const serverInterface = new aws.ec2.NetworkInterface(
+    `network-interface-server`,
+    {
+        subnetId: subnet1.id,
+        securityGroups: [ serverSecGroup.id, nodeToNodeSecGroup.id ],
+    },
+    { provider: awsProvider }
+);
+
+export const agentInterfaces = Array.from(Array(agentNodeCount).keys()).map(
     ix => new aws.ec2.NetworkInterface(
-        `network-interface-${ix}`,
+        `network-interface-agent-${ix}`,
         {
             subnetId: subnet1.id,
-            securityGroups: [ secGroup.id ],
+            securityGroups: [ agentSecGroup.id, nodeToNodeSecGroup.id ],
         },
         { provider: awsProvider }
     )
 );
 
-Array.from(Array(nodeCount).keys()).map(
+new aws.ec2.EipAssociation(
+    `assocation-server`,
+    {
+        allocationId: serverAddress.id,
+        networkInterfaceId: serverInterface.id,
+    },
+    { provider: awsProvider }
+);
+
+Array.from(Array(agentNodeCount).keys()).map(
     ix => new aws.ec2.EipAssociation(
-        `assocation-${ix}`,
+        `assocation-agent-${ix}`,
         {
-            allocationId: addresses[ix].id,
-            networkInterfaceId: interfaces[ix].id,
+            allocationId: agentAddresses[ix].id,
+            networkInterfaceId: agentInterfaces[ix].id,
         },
         { provider: awsProvider }
     )

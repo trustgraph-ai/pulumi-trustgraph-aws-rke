@@ -1,7 +1,7 @@
 
 import * as fs from 'fs';
 
-import { addresses } from './addresses';
+import { serverAddress } from './addresses';
 import { sshKey } from './keypair';
 import { kubeconfig } from './kubeconfig';
 import { appDeploy } from './app';
@@ -43,7 +43,7 @@ kubeconfig.apply(
     }
 );
 
-export const serverAddress = addresses[0].publicIp;
+export const server = serverAddress.publicIp;
 
 // --------------------------------------------------------------------------
 

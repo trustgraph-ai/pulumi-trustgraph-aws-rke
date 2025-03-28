@@ -5,4 +5,4 @@ config:
   trustgraph-aws-rke:vpc-cidr: 172.38.0.0/16
   trustgraph-aws-rke:subnet-1-cidr: 172.38.48.0/20
   trustgraph-aws-rke:node-type: t3a.xlarge
-  trustgraph-aws-rke:node-count: 3
+  trustgraph-aws-rke:agent-node-count: 2

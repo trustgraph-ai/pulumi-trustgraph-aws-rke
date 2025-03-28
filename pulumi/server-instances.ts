@@ -7,14 +7,14 @@ import { nodeType, volumeSize } from './config';
 import { ami } from './config';
 import { awsProvider, accountId } from './aws-provider';
 import { serverTemplate } from './templates';
-import { interfaces } from './interfaces';
-import { addresses } from './addresses';
+import { serverInterface } from './interfaces';
+import { serverAddress } from './addresses';
 import { keypair } from './keypair';
 import { clusterToken } from './cluster-token';
 import { instanceProfile } from './instance-profile';
 
 const serverUserData = pulumi.all(
-    [addresses[0].publicIp, clusterToken.result]
+    [serverAddress.publicIp, clusterToken.result]
 ).apply(
     ([address, token]) => {
         if (address == undefined) {
@@ -30,7 +30,7 @@ const serverUserData = pulumi.all(
 );
 
 export const serverInstance = new aws.ec2.Instance(
-    "ec2-instance-0",
+    "ec2-server-instance",
     {
         ami: ami,
         availabilityZone: region + "a",
@@ -39,7 +39,7 @@ export const serverInstance = new aws.ec2.Instance(
         networkInterfaces: [
             {
                 deviceIndex: 0,
-                networkInterfaceId: interfaces[0].id,
+                networkInterfaceId: serverInterface.id,
                 deleteOnTermination: false,
             }
         ],
@@ -58,7 +58,7 @@ export const serverInstance = new aws.ec2.Instance(
             httpPutResponseHopLimit: 2,
         },
         tags: {
-            Name: `${prefix}-node-0`,
+            Name: `${prefix}-server`,
         },
         userData: serverUserData,
         userDataReplaceOnChange: true,

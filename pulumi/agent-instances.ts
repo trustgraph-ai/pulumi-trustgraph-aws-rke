@@ -3,22 +3,22 @@ import * as pulumi from "@pulumi/pulumi";
 import * as aws from "@pulumi/aws";
 
 import { prefix, region } from './config';
-import { nodeType, nodeCount, volumeSize } from './config';
+import { nodeType, agentNodeCount, volumeSize } from './config';
 import { ami } from './config';
 import { awsProvider, accountId } from './aws-provider';
 import { agentTemplate } from './templates';
-import { interfaces } from './interfaces';
-import { addresses } from './addresses';
+import { agentInterfaces } from './interfaces';
+import { agentAddresses, serverAddress } from './addresses';
 import { keypair } from './keypair';
 import { clusterToken } from './cluster-token';
 import { instanceProfile } from './instance-profile';
 import { serverInstance } from './server-instances';
 
-export const agentInstances = Array.from(Array(nodeCount - 1).keys()).map(
+export const agentInstances = Array.from(Array(agentNodeCount).keys()).map(
     ix => {
 
         const userData = pulumi.all([
-            addresses[0].publicIp, addresses[ix+1].publicIp,
+            serverAddress.publicIp, agentAddresses[ix].publicIp,
             clusterToken.result
         ]).apply(
             ([server, me, token]) => {
@@ -40,7 +40,7 @@ export const agentInstances = Array.from(Array(nodeCount - 1).keys()).map(
         );
 
         return new aws.ec2.Instance(
-            `ec2-instance-${ix + 1}`,
+            `ec2-agent-instance-${ix}`,
             {
                 ami: ami,
                 availabilityZone: region + "a",
@@ -49,7 +49,7 @@ export const agentInstances = Array.from(Array(nodeCount - 1).keys()).map(
                 networkInterfaces: [
                     {
                         deviceIndex: 0,
-                        networkInterfaceId: interfaces[ix + 1].id,
+                        networkInterfaceId: agentInterfaces[ix].id,
                         deleteOnTermination: false,
                     }
                 ],
@@ -68,7 +68,7 @@ export const agentInstances = Array.from(Array(nodeCount - 1).keys()).map(
                     httpPutResponseHopLimit: 2,
                 },
                 tags: {
-                    Name: `${prefix}-node-${ix+1}`,
+                    Name: `${prefix}-agent-${ix}`,
                 },
                 userData: userData,
                 userDataReplaceOnChange: true,
