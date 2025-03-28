@@ -14,16 +14,21 @@ import { clusterToken } from './cluster-token';
 import { instanceProfile } from './instance-profile';
 
 const serverUserData = pulumi.all(
-    [serverAddress.publicIp, clusterToken.result]
+    [serverAddress.publicIp, serverInterface.privateIp, clusterToken.result]
 ).apply(
-    ([address, token]) => {
-        if (address == undefined) {
+    ([external, internal, token]) => {
+        if (external == undefined) {
+            console.log("AWS EIP has no IP address!");
+            return "";
+        }
+        if (internal == undefined) {
             console.log("AWS EIP has no IP address!");
             return "";
         }
         return btoa(
             serverTemplate.
-                replace("%MY-IP%", address).
+                replace("%INTERNAL-ADDR%", internal).
+                replace("%EXTERNAL-ADDR%", external).
                 replace("%TOKEN%", token)
         );
     }

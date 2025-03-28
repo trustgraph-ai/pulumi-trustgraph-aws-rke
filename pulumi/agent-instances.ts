@@ -7,7 +7,7 @@ import { nodeType, agentNodeCount, volumeSize } from './config';
 import { ami } from './config';
 import { awsProvider, accountId } from './aws-provider';
 import { agentTemplate } from './templates';
-import { agentInterfaces } from './interfaces';
+import { agentInterfaces, serverInterface } from './interfaces';
 import { agentAddresses, serverAddress } from './addresses';
 import { keypair } from './keypair';
 import { clusterToken } from './cluster-token';
@@ -18,22 +18,22 @@ export const agentInstances = Array.from(Array(agentNodeCount).keys()).map(
     ix => {
 
         const userData = pulumi.all([
-            serverAddress.publicIp, agentAddresses[ix].publicIp,
+            serverInterface.privateIp, agentInterfaces[ix].privateIp,
             clusterToken.result
         ]).apply(
-            ([server, me, token]) => {
-                if (server === undefined) {
+            ([server, internal, token]) => {
+                if (server == undefined) {
                     console.log("AWS EIP has no IP address!");
                     return "";
                 }
-                if (me === undefined) {
+                if (internal == undefined) {
                     console.log("AWS EIP has no IP address!");
                     return "";
                 }
                 return btoa(
                     agentTemplate.
-                        replace("%SERVER-IP%", server).
-                        replace("%MY-IP%", me).
+                        replace("%SERVER-ADDR%", server).
+                        replace("%INTERNAL-ADDR%", internal).
                         replace("%TOKEN%", token)
                 )
             }

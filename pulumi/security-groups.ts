@@ -86,7 +86,6 @@ export const nodeToNodeSecGroup = new aws.ec2.SecurityGroup(
                 protocol: 'tcp',
                 fromPort: 9345,
                 toPort: 9345,
-                cidrBlocks: [ "0.0.0.0/0" ],
                 securityGroups: [serverSecGroup.id, agentSecGroup.id],
             },
             // kubelet metrics
@@ -94,7 +93,6 @@ export const nodeToNodeSecGroup = new aws.ec2.SecurityGroup(
                 protocol: 'tcp',
                 fromPort: 10250,
                 toPort: 10250,
-                cidrBlocks: [ "0.0.0.0/0" ],
                 securityGroups: [serverSecGroup.id, agentSecGroup.id],
             },
             // etcd client
@@ -102,7 +100,6 @@ export const nodeToNodeSecGroup = new aws.ec2.SecurityGroup(
                 protocol: 'tcp',
                 fromPort: 2379,
                 toPort: 2379,
-                cidrBlocks: [ "0.0.0.0/0" ],
                 securityGroups: [serverSecGroup.id],
             },
             // etcd peer port
@@ -110,7 +107,6 @@ export const nodeToNodeSecGroup = new aws.ec2.SecurityGroup(
                 protocol: 'tcp',
                 fromPort: 2380,
                 toPort: 2380,
-                cidrBlocks: [ "0.0.0.0/0" ],
                 securityGroups: [serverSecGroup.id],
             },
             // etcd metrics port
@@ -118,7 +114,6 @@ export const nodeToNodeSecGroup = new aws.ec2.SecurityGroup(
                 protocol: 'tcp',
                 fromPort: 2381,
                 toPort: 2381,
-                cidrBlocks: [ "0.0.0.0/0" ],
                 securityGroups: [serverSecGroup.id],
             },
             // NodePort range
@@ -126,7 +121,6 @@ export const nodeToNodeSecGroup = new aws.ec2.SecurityGroup(
                 protocol: 'tcp',
                 fromPort: 30000,
                 toPort: 32767,
-                cidrBlocks: [ "0.0.0.0/0" ],
                 securityGroups: [serverSecGroup.id, agentSecGroup.id],
             },
             // Canal
@@ -134,14 +128,12 @@ export const nodeToNodeSecGroup = new aws.ec2.SecurityGroup(
                 protocol: 'udp',
                 fromPort: 8472,
                 toPort: 8472,
-                cidrBlocks: [ "0.0.0.0/0" ],
                 securityGroups: [serverSecGroup.id, agentSecGroup.id],
             },
             {
                 protocol: 'tcp',
                 fromPort: 9099,
                 toPort: 9099,
-                cidrBlocks: [ "0.0.0.0/0" ],
                 securityGroups: [serverSecGroup.id, agentSecGroup.id],
             },
         ],

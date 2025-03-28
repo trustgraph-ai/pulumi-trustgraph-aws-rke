@@ -8,9 +8,9 @@ platform.
 
 The full stack includes:
 
-- A Kubernetes cluster
-- Node pool containing 2 nodes
-- An IAM application plus policy granting Gen AI access
+- An RKE2 Kubernetes cluster with 1 'server' and multiple 'agents'.
+- IAM configuration with roles/users granting Bedrock access etc.
+- The EBS CSI add-on, so that Kubernetes can provision disks
 - Deploys a complete TrustGraph stack of resources in AKS
 
 Keys and other configuration for the AI components are configured into
@@ -112,6 +112,13 @@ If something goes wrong while deploying, retry before giving up.
 `pulumi up` is a retryable command and will continue from
 where it left off.
 
+When the Pulumi scripts finish, the Kubernetes cluster will be running,
+with TrustGraph deployed, but there will be a little wait for initialisation
+to complete, which involves deploying storage and downloading containers.
+The above `get pod` command will let you check to see when all the PODs
+are running.  Allow another ~30 seconds for application initialisation
+and you'll have a working system.
+
 ## Use the system
 
 To get access to TrustGraph using the `kube.cfg` file, set up some
@@ -135,5 +142,6 @@ respectively.
 pulumi destroy
 ```
 
-Just say yes.
+Just say yes.  The EBS CSI driver doesn't tidy away storage, so you may
+need to go delete volumes it created in EC2's 'volume' tab.
 
