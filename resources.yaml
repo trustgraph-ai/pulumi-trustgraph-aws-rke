@@ -15,11 +15,6 @@ items:
   provisioner: ebs.csi.aws.com
   reclaimPolicy: Delete
   volumeBindingMode: WaitForFirstConsumer
-- apiVersion: v1
-  kind: Namespace
-  metadata:
-    name: trustgraph
-  spec: {}
 - apiVersion: apps/v1
   kind: Deployment
   metadata:

@@ -60,7 +60,7 @@ export const agentInstances = Array.from(Array(nodeCount - 1).keys()).map(
                     deleteOnTermination: true,
                     encrypted: true,
                     tags: {
-                        Name: prefix,
+                        Name: `${prefix}-node-${ix}`,
                     },
                 },
                 metadataOptions: {
