@@ -12,11 +12,16 @@ The full stack includes:
 - IAM configuration with roles/users granting Bedrock access etc.
 - The EBS CSI add-on, so that Kubernetes can provision disks
 - Deploys a complete TrustGraph stack of resources in AKS
+- Configured to use Bedrock as an LLM service.
 
 Keys and other configuration for the AI components are configured into
 TrustGraph using secrets.
 
 The Pulumi configuration configures a Mistral nemo instruct endpoint.
+
+Using Bedrock LLMs requires changing Bedrock model access to change the
+model you use, the resources included invoke Claude 3.5 Haiku but you
+can change that in resources.yaml.
 
 ## How it works
 
@@ -88,7 +93,10 @@ The `Pulumi.STACKNAME.yaml` configuration file contains settings for:
   trustgraph-aws-rke:subnet-1-cidr: 172.38.48.0/20
   trustgraph-aws-rke:node-type: t3a.xlarge
   trustgraph-aws-rke:node-count: 3
+  trustgraph-aws-rke:ami: ami-0f9d441b5d66d5f31
 ```
+
+That AMI ID is Amazon Linux 2023 in the Oregon region (us-west-2).
 
 ## Deploy
 
