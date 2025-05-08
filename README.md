@@ -113,7 +113,7 @@ If everything works:
 To connect to the Kubernetes cluster...
 
 ```
-kubectl --kubeconfig kubeconfig -n trustgraph get pods
+kubectl --kubeconfig kube.cfg -n trustgraph get pods
 ```
 
 If something goes wrong while deploying, retry before giving up.
