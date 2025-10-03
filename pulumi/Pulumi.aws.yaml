@@ -10,4 +10,3 @@ config:
 
   # Amazon Linux 2023, x86-64 in us-west-2 (Oregon)
   trustgraph-aws-rke:ami: ami-0f9d441b5d66d5f31
-
