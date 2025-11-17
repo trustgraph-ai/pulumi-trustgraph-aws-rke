@@ -159,6 +159,6 @@ need to go delete volumes it created in EC2's 'volume' tab.
 python3 -m venv env
 . env/bin/activate
 pip install --upgrade git+https://github.com/trustgraph-ai/trustgraph-templates@5e839db05e9e278374d510c9cdd0c02ade12aabd
-tg-configurator -t 1.4 -v 1.4.19 --platform eks-k8s -R > resources.yaml
+tg-configurator -t 1.5 -v 1.5.7 --platform eks-k8s -R > resources.yaml
 ```
 
