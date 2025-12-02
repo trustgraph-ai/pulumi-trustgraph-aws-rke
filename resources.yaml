@@ -2061,8 +2061,8 @@ items:
       "triples": {"request": "non-persistent://tg/request/triples:default", "response":
       "non-persistent://tg/response/triples:default"}, "triples-store": "persistent://tg/flow/triples-store:default"},
       "parameters": {"chunk-overlap": "50", "chunk-size": "2000", "embeddings-model":
-      "sentence-transformers/all-MiniLM-L6-v2", "llm-model": "anthropic.claude-3-7-sonnet-20250219-v1:0",
-      "llm-rag-model": "anthropic.claude-3-7-sonnet-20250219-v1:0", "llm-rag-temperature":
+      "sentence-transformers/all-MiniLM-L6-v2", "llm-model": "global.anthropic.claude-sonnet-4-5-20250929-v1:0",
+      "llm-rag-model": "global.anthropic.claude-sonnet-4-5-20250929-v1:0", "llm-rag-temperature":
       "0.300", "llm-temperature": "0.300"}}}, "flows-active": {"agent-manager": {"default":
       {"graph-rag-request": "non-persistent://tg/request/graph-rag:default", "graph-rag-response":
       "non-persistent://tg/response/graph-rag:default", "mcp-tool-request": "non-persistent://tg/request/mcp-tool:default",
@@ -2143,9 +2143,9 @@ items:
       "non-persistent://tg/request/objects:default", "objects-query-response": "non-persistent://tg/response/objects:default",
       "request": "non-persistent://tg/request/structured-query:default", "response":
       "non-persistent://tg/response/structured-query:default"}}, "text-completion":
-      {"default": {"model": "anthropic.claude-3-7-sonnet-20250219-v1:0", "request":
+      {"default": {"model": "global.anthropic.claude-sonnet-4-5-20250929-v1:0", "request":
       "non-persistent://tg/request/text-completion:default", "response": "non-persistent://tg/response/text-completion:default"}},
-      "text-completion-rag": {"default": {"model": "anthropic.claude-3-7-sonnet-20250219-v1:0",
+      "text-completion-rag": {"default": {"model": "global.anthropic.claude-sonnet-4-5-20250929-v1:0",
       "request": "non-persistent://tg/request/text-completion-rag:default", "response":
       "non-persistent://tg/response/text-completion-rag:default"}}, "triples-query":
       {"default": {"request": "non-persistent://tg/request/triples:default", "response":
@@ -2204,9 +2204,23 @@ items:
       {"description": "bge-large-en-v1.5", "id": "BAAI/bge-large-en-v1.5"}, {"description":
       "gte-large", "id": "thenlper/gte-large"}, {"description": "multilingual-e5-large",
       "id": "intfloat/multilingual-e5-large"}], "required": true, "type": "string"},
-      "llm-model": {"default": "anthropic.claude-3-7-sonnet-20250219-v1:0", "description":
-      "LLM model to use", "enum": [{"description": "Claude 3.7 Sonnet", "id": "anthropic.claude-3-7-sonnet-20250219-v1:0"}],
-      "required": true, "type": "string"}, "llm-temperature": {"default": 0.3, "description":
+      "llm-model": {"default": "global.anthropic.claude-sonnet-4-5-20250929-v1:0",
+      "description": "LLM model to use", "enum": [{"description": "Claude Sonnet 4.5
+      (smartest for complex agents and coding)", "id": "global.anthropic.claude-sonnet-4-5-20250929-v1:0"},
+      {"description": "Claude Opus 4.5 (maximum intelligence)", "id": "global.anthropic.claude-opus-4-5-20251101-v1:0"},
+      {"description": "Claude Haiku 4.5 (fastest with near-frontier intelligence)",
+      "id": "global.anthropic.claude-haiku-4-5-20251001-v1:0"}, {"description": "Claude
+      Opus 4.1 (specialized reasoning)", "id": "global.anthropic.claude-opus-4-1-20250805-v1:0"},
+      {"description": "Claude Sonnet 4.0", "id": "global.anthropic.claude-sonnet-4-20250514-v1:0"},
+      {"description": "Claude Opus 4.0", "id": "global.anthropic.claude-opus-4-20250514-v1:0"},
+      {"description": "Claude 3.5 Haiku", "id": "anthropic.claude-3-5-haiku-20241022-v1:0"},
+      {"description": "Claude 3 Haiku", "id": "anthropic.claude-3-haiku-20240307-v1:0"},
+      {"description": "Llama 3.1 405B Instruct", "id": "meta.llama3-1-405b-instruct-v1:0"},
+      {"description": "Llama 3.1 70B Instruct", "id": "meta.llama3-1-70b-instruct-v1:0"},
+      {"description": "Llama 3.1 8B Instruct", "id": "meta.llama3-1-8b-instruct-v1:0"},
+      {"description": "Mistral Large", "id": "mistral.mistral-large-2407-v1:0"}, {"description":
+      "Mixtral 8x7B Instruct", "id": "mistral.mixtral-8x7b-instruct-v0:1"}], "required":
+      true, "type": "string"}, "llm-temperature": {"default": 0.3, "description":
       "LLM temperature", "helper": "A floating point number between 0 and 1", "max":
       10, "min": 0, "placeholder": 0.3, "required": true, "type": "float"}}, "prompt":
       {"system": "You are a helpful assistant.", "template-index": ["agent-kg-extract",

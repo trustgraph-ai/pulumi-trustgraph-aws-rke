@@ -40,18 +40,6 @@
         "name": "bedrock",
         "parameters": {
             "max-output-tokens": 4096,
-	    "models": {
-		"type": "string",
-		"description": "LLM model to use",
-		"default": "anthropic.claude-3-7-sonnet-20250219-v1:0",
-		"enum": [
-		    {
-			id: "anthropic.claude-3-7-sonnet-20250219-v1:0",
-			description: "Claude 3.7 Sonnet"
-		    },
-		],
-		"required": true
-	    }
         }
     }
 ]
