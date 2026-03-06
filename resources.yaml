@@ -6,6 +6,8 @@ items:
     name: tg
   parameters:
     encrypted: 'true'
+    iops: '6000'
+    throughput: '400'
     type: gp3
   provisioner: ebs.csi.aws.com
   reclaimPolicy: Delete
