@@ -1,5 +1,5 @@
 {
-    "name": "dice",
+    "name": "pulumi",
     "main": "index.ts",
     "devDependencies": {
         "@types/node": "^25"
