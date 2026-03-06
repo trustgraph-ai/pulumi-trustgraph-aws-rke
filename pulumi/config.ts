@@ -47,3 +47,18 @@ export const agentNodeCount = Number(get("agent-node-count"));
 // Machine AMI
 export const ami = get("ami");
 
+// Compute private IPs from subnet CIDR
+// Subnet is e.g. 172.38.48.0/20, we assign .10 for server, .20+ for agents
+function computePrivateIps(subnetCidr: string, agentCount: number) {
+    const [network] = subnetCidr.split('/');
+    const parts = network.split('.');
+    const base = parts.slice(0, 3).join('.');
+    const serverIp = `${base}.10`;
+    const agentIps = Array.from({ length: agentCount }, (_, i) => `${base}.${20 + i}`);
+    return { serverIp, agentIps };
+}
+
+const privateIps = computePrivateIps(subnet1Cidr, agentNodeCount);
+export const serverPrivateIp = privateIps.serverIp;
+export const agentPrivateIps = privateIps.agentIps;
+

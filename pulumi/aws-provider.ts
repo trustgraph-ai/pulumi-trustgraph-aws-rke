@@ -19,7 +19,8 @@ export const awsProvider = new aws.Provider(
 
 // Get caller information
 export const callerId = aws.getCallerIdentity(
-    { provider: awsProvider, }
+    {},
+    { provider: awsProvider }
 );
 
 // Get AWS account ID
