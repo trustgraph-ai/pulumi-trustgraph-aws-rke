@@ -160,6 +160,6 @@ rm -rf env
 python3 -m venv env
 . env/bin/activate
 pip install --upgrade git+https://github.com/trustgraph-ai/trustgraph-templates@master
-tg-configurator -t 1.8 -v 1.8.12 --platform eks-k8s -R > resources.yaml
+tg-build-deployment -t 2.0 -v 2.0.13 --platform eks-k8s -R > resources.yaml
 ```
 
