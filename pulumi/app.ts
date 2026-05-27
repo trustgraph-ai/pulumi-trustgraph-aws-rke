@@ -1,11 +1,30 @@
 
 import * as fs from 'fs';
 import * as k8s from '@pulumi/kubernetes';
+import * as pulumi from '@pulumi/pulumi';
+import * as random from '@pulumi/random';
 
 import { region } from './config';
 import { aiAccessKey } from './bedrock-user';
 import { ebsCsiDeploy } from './ebs-csi-deployment';
 import { k8sProvider } from './k8s-provider';
+
+export const iamBootstrapToken = new random.RandomPassword(
+    "iam-bootstrap-token",
+    {
+        length: 32,
+        special: false,
+    },
+);
+
+export const grafanaAdminPassword = new random.RandomPassword(
+    "grafana-admin-password",
+    {
+        length: 16,
+        special: true,
+        overrideSpecial: "!@#$%^&*",
+    },
+);
 
 // Get application resource definitions
 const resourceDefs = fs.readFileSync("../resources.yaml", {encoding: "utf-8"});
@@ -20,22 +39,20 @@ export const appDeploy = new k8s.yaml.v2.ConfigGroup(
     { provider: k8sProvider, dependsOn: ebsCsiDeploy }
 );
 
-// Generate an (empty) gateway secret - no authentication
-const gatewaySecret = new k8s.core.v1.Secret(
-    "gateway-secret",
+const iamSecret = new k8s.core.v1.Secret(
+    "iam-bootstrap-token",
     {
         metadata: {
-            name: "gateway-secret",
+            name: "iam-bootstrap-token",
             namespace: "trustgraph"
         },
         stringData: {
-            "gateway-secret": ""
+            "token": pulumi.interpolate`tg_${iamBootstrapToken.result}`,
         },
     },
     { provider: k8sProvider, dependsOn: appDeploy }
 );
 
-// Generate an (empty) gateway secret - no authentication
 const aiSecret = new k8s.core.v1.Secret(
     "ai-secret",
     {
@@ -52,16 +69,16 @@ const aiSecret = new k8s.core.v1.Secret(
     { provider: k8sProvider, dependsOn: appDeploy }
 );
 
-// Generate an (empty) MCP server secret - no authentication
-const mcpServerSecret = new k8s.core.v1.Secret(
-    "mcp-server-secret",
+
+const grafanaSecret = new k8s.core.v1.Secret(
+    "grafana-secret",
     {
         metadata: {
-            name: "mcp-server-secret",
+            name: "grafana-secret",
             namespace: "trustgraph"
         },
         stringData: {
-            "mcp-server-secret": ""
+            "password": grafanaAdminPassword.result,
         },
     },
     { provider: k8sProvider, dependsOn: appDeploy }

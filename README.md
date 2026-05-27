@@ -143,6 +143,21 @@ This will allow you to access Grafana and the Workbench UI from your local
 browser using `http://localhost:3000` and `http://localhost:8888`
 respectively.
 
+The IAM bootstrap token and Grafana admin password are auto-generated
+by Pulumi.  After deployment, retrieve them with:
+```
+pulumi stack output iamToken --show-secrets
+pulumi stack output grafanaPassword --show-secrets
+```
+
+Login to Grafana with username `admin` and the password from the command
+above.
+
+To use the TrustGraph API with authentication:
+```
+export TRUSTGRAPH_TOKEN=$(pulumi stack output iamToken --show-secrets)
+```
+
 
 ## Deploy
 
@@ -156,6 +171,6 @@ need to go delete volumes it created in EC2's 'volume' tab.
 ## How the config was built
 
 ```
-./update-config eks-k8s 2.2.24
+./update-config eks-k8s 2.4.29
 ```
 

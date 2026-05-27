@@ -1,10 +1,11 @@
 
 import * as fs from 'fs';
+import * as pulumi from '@pulumi/pulumi';
 
 import { serverAddress } from './addresses';
 import { sshKey } from './keypair';
 import { kubeconfig } from './kubeconfig';
-import { appDeploy } from './app';
+import { appDeploy, iamBootstrapToken, grafanaAdminPassword } from './app';
 
 // --------------------------------------------------------------------------
 
@@ -44,6 +45,10 @@ kubeconfig.apply(
 );
 
 export const server = serverAddress.publicIp;
+
+export const iamToken = pulumi.interpolate`tg_${iamBootstrapToken.result}`;
+
+export const grafanaPassword = grafanaAdminPassword.result;
 
 // --------------------------------------------------------------------------
 
