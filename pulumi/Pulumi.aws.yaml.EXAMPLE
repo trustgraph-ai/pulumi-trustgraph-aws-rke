@@ -10,3 +10,7 @@ config:
 
   # Amazon Linux 2023, x86-64 in eu-west-2 (London)
   trustgraph-aws-rke:ami: ami-03f3a22c5f8f5ef58
+
+  trustgraph-aws-rke:domain: app.example.com
+  trustgraph-aws-rke:grafana-domain: grafana.example.com
+  trustgraph-aws-rke:letsencrypt-email: admin@example.com
