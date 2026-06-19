@@ -11,7 +11,10 @@ The full stack includes:
 - An RKE2 Kubernetes cluster with 1 'server' and multiple 'agents'.
 - IAM configuration with roles/users granting Bedrock access etc.
 - The EBS CSI add-on, so that Kubernetes can provision disks
-- Deploys a complete TrustGraph stack of resources in AKS
+- Deploys a complete TrustGraph stack of resources in Kubernetes
+- AWS NLB + Nginx Gateway Fabric for ingress with Gateway API
+- cert-manager with Let's Encrypt TLS certificates
+- HTTPS access to TrustGraph UI and Grafana via public DNS names
 - Configured to use Bedrock as an LLM service.
 
 Keys and other configuration for the AI components are configured into
@@ -86,17 +89,20 @@ You can edit:
 
 The `Pulumi.STACKNAME.yaml` configuration file contains settings for:
 
-```
-  trustgraph-aws-rke:environment: dev
-  trustgraph-aws-rke:region: us-west-2
-  trustgraph-aws-rke:vpc-cidr: 172.38.0.0/16
-  trustgraph-aws-rke:subnet-1-cidr: 172.38.48.0/20
-  trustgraph-aws-rke:node-type: t3a.xlarge
-  trustgraph-aws-rke:node-count: 3
-  trustgraph-aws-rke:ami: ami-0f9d441b5d66d5f31
-```
-
-That AMI ID is Amazon Linux 2023 in the Oregon region (us-west-2).
+- `trustgraph-aws-rke:environment` - Name of the environment (e.g. dev, prod).
+- `trustgraph-aws-rke:region` - AWS region (e.g. eu-west-2).
+- `trustgraph-aws-rke:vpc-cidr` - CIDR block for the VPC (e.g. 172.38.0.0/16).
+- `trustgraph-aws-rke:subnet-1-cidr` - CIDR block for the subnet
+  (e.g. 172.38.48.0/20).
+- `trustgraph-aws-rke:node-type` - EC2 instance type (e.g. t3a.xlarge).
+- `trustgraph-aws-rke:agent-node-count` - Number of agent nodes.
+- `trustgraph-aws-rke:ami` - AMI ID for Amazon Linux 2023 in your region.
+- `trustgraph-aws-rke:domain` - Domain name for the TrustGraph UI
+  (e.g. app.example.com).
+- `trustgraph-aws-rke:grafana-domain` - Domain name for Grafana
+  (e.g. grafana.example.com).
+- `trustgraph-aws-rke:letsencrypt-email` - Email address for Let's Encrypt
+  certificate registration.
 
 ## Deploy
 
@@ -127,19 +133,34 @@ The above `get pod` command will let you check to see when all the PODs
 are running.  Allow another ~30 seconds for application initialisation
 and you'll have a working system.
 
+## DNS setup
+
+After deployment, get the NLB DNS name:
+
+```
+pulumi stack output nlbDnsName
+```
+
+Create DNS CNAME records pointing both your domain and grafana-domain at this
+NLB DNS name.  cert-manager will automatically obtain Let's Encrypt TLS
+certificates once DNS resolves.
+
 ## Use the system
 
-To get access to TrustGraph using the `kube.cfg` file, set up some
-port-forwarding.  You'll need multiple terminal windows to run each of
-these commands:
+Once DNS is configured, access the services at:
+
+- TrustGraph UI: `https://<your-domain>`
+- Grafana: `https://<your-grafana-domain>`
+
+Alternatively, you can use port-forwarding with the `kube.cfg` file:
 
 ```
 kubectl --kubeconfig kube.cfg port-forward service/api-gateway 8088:8088
-kubectl --kubeconfig kube.cfg port-forward service/workbench-ui 8888:8888
+kubectl --kubeconfig kube.cfg port-forward service/trustgraph-ui 8888:8888
 kubectl --kubeconfig kube.cfg port-forward service/grafana 3000:3000
 ```
 
-This will allow you to access Grafana and the Workbench UI from your local
+This will allow you to access Grafana and the TrustGraph UI from your local
 browser using `http://localhost:3000` and `http://localhost:8888`
 respectively.
 
@@ -159,7 +180,7 @@ export TRUSTGRAPH_TOKEN=$(pulumi stack output iamToken --show-secrets)
 ```
 
 
-## Deploy
+## Destroy
 
 ```
 pulumi destroy
@@ -171,6 +192,6 @@ need to go delete volumes it created in EC2's 'volume' tab.
 ## How the config was built
 
 ```
-./update-config eks-k8s 2.4.29
+./update-config eks-k8s 2.5.16
 ```
 

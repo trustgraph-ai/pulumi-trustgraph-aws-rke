@@ -48,13 +48,27 @@ export const agentSecGroup = new aws.ec2.SecurityGroup(
     "agent-security-group",
     {
         vpcId: vpc.id,
-        description: "RKE2 servers",
+        description: "RKE2 agents",
         ingress: [
             // SSH
             {
                 protocol: 'tcp',
                 fromPort: 22,
                 toPort: 22,
+                cidrBlocks: [ "0.0.0.0/0" ],
+            },
+            // HTTP (for gateway / ACME challenges)
+            {
+                protocol: 'tcp',
+                fromPort: 80,
+                toPort: 80,
+                cidrBlocks: [ "0.0.0.0/0" ],
+            },
+            // HTTPS (for gateway)
+            {
+                protocol: 'tcp',
+                fromPort: 443,
+                toPort: 443,
                 cidrBlocks: [ "0.0.0.0/0" ],
             },
         ],

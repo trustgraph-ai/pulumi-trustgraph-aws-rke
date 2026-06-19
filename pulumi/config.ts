@@ -11,7 +11,7 @@ function get(tag : string) {
 
     if (!val) {
         console.log("ERROR: The '" + tag + "' config is mandatory");
-        throw "The '" + tag + "' config is mandatory";
+        throw new Error("The '" + tag + "' config is mandatory");
     }
 
     return val;
@@ -61,4 +61,8 @@ function computePrivateIps(subnetCidr: string, agentCount: number) {
 const privateIps = computePrivateIps(subnet1Cidr, agentNodeCount);
 export const serverPrivateIp = privateIps.serverIp;
 export const agentPrivateIps = privateIps.agentIps;
+
+export const domain = get("domain");
+export const grafanaDomain = get("grafana-domain");
+export const letsencryptEmail = get("letsencrypt-email");
 

@@ -4,11 +4,19 @@
         "parameters": {}
     },
     {
+        "name": "vector-store-qdrant",
+        "parameters": {}
+    },
+    {
         "name": "row-store-cassandra",
         "parameters": {}
     },
     {
-        "name": "vector-store-qdrant",
+        "name": "cassandra",
+        "parameters": {}
+    },
+    {
+        "name": "garage",
         "parameters": {}
     },
     {
@@ -24,13 +32,17 @@
         "parameters": {}
     },
     {
+        "name": "mcp-server",
+        "parameters": {}
+    },
+    {
         "name": "embeddings-fastembed",
         "parameters": {}
     },
     {
         "name": "bedrock",
         "parameters": {
-            "max-output-tokens": 4096,
+            "max-output-tokens": 4096
         }
     },
     {

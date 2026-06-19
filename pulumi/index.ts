@@ -6,6 +6,7 @@ import { serverAddress } from './addresses';
 import { sshKey } from './keypair';
 import { kubeconfig } from './kubeconfig';
 import { appDeploy, iamBootstrapToken, grafanaAdminPassword } from './app';
+import { nlbDnsName } from './gateway';
 
 // --------------------------------------------------------------------------
 
@@ -52,8 +53,5 @@ export const grafanaPassword = grafanaAdminPassword.result;
 
 // --------------------------------------------------------------------------
 
-// Have to reference these things here so that they get deployed
-const keep = [
-    appDeploy,
-];
+export { nlbDnsName };
 
